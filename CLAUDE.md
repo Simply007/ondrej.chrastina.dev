@@ -76,3 +76,5 @@ It is used for page creation (`gatsby-node.js`), the sitemap and RSS (`gatsby-co
 ## Deployment
 
 GitHub Actions (`.github/workflows/build-and-publish.yml`) builds on push to `source` branch and deploys to `master` branch for GitHub Pages. Requires `KONTENT_PROJECT_ID` and `KONTENT_LANGUAGE_CODENAMES` secrets.
+
+The repo is `Simply007/ondrej.chrastina.dev`, a project site with its own custom domain (`src/CNAME`). It is not the GitHub user site: `Simply007/Simply007.github.io` is the `chrastina.dev` landing page, so every other repo with GitHub Pages is served at `chrastina.dev/<repo>/`. Those project sites lived at `ondrej.chrastina.dev/<repo>/` until November 2026; `src/utils/legacy-redirects.js` (tested) lists them and the deeper links the content uses; `gatsby-node.js` passes them to `createRedirect`, and `gatsby-plugin-meta-redirect` writes each as a meta refresh page. Never create a page or section whose path is one of those repo names.

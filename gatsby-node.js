@@ -11,6 +11,7 @@ const path = require('path')
 const { parsePath } = require('gatsby')
 const fs = require('fs')
 const { pathFor } = require('./src/utils/paths')
+const { legacyRedirects } = require('./src/utils/legacy-redirects')
 const {
   buildRobotsTxt,
   buildLlmsTxt,
@@ -92,7 +93,10 @@ exports.createSchemaCustomization = async (api) => {
 }
 
 exports.createPages = async ({ graphql, actions }) => {
-  const { createPage } = actions
+  const { createPage, createRedirect } = actions
+
+  // project sites moved to chrastina.dev, see src/utils/legacy-redirects.js
+  legacyRedirects().forEach((redirect) => createRedirect(redirect))
 
   const { data } = await graphql(`
     query localPagesQuery {
