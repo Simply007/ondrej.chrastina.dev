@@ -1,101 +1,49 @@
 const { test } = require('node:test')
 const assert = require('node:assert/strict')
-const vm = require('node:vm')
 const {
   LEGACY_PROJECT_SITES,
-  legacyProjectUrl,
-  legacyRedirectScript,
+  LEGACY_DEEP_LINKS,
+  legacyRedirects,
 } = require('../src/utils/legacy-redirects')
-const {
-  buildRedirectPage,
-  buildRedirectPages,
-} = require('../lib/legacy-redirects')
+const { SECTIONS } = require('../src/utils/paths')
 
-// [pathname, search, hash, expected]
-const CASES = [
-  [
-    '/ckeditor-shadow-showcase/',
-    '',
-    '',
-    'https://chrastina.dev/ckeditor-shadow-showcase/',
-  ],
-  [
-    '/ckeditor-shadow-showcase',
-    '',
-    '',
-    'https://chrastina.dev/ckeditor-shadow-showcase/',
-  ],
-  [
-    '/kontent-custom-element-samples/gallery',
-    '?a=1',
-    '#top',
-    'https://chrastina.dev/kontent-custom-element-samples/gallery?a=1#top',
-  ],
-  // GitHub Pages matches the repo segment case-insensitively
-  ['/home/', '', '', 'https://chrastina.dev/Home/'],
-  [
-    '/reactiveconfprague2018/slides/',
-    '',
-    '',
-    'https://chrastina.dev/ReactiveConfPrague2018/slides/',
-  ],
-  // the site's own pages stay put
-  ['/', '', '', null],
-  ['/talks/', '', '', null],
-  ['/journal/some-post/', '', '', null],
-  // a prefix of a repo name is not that repo
-  ['/smart/', '', '', null],
-]
-
-test('maps old project site URLs to chrastina.dev, other paths to null', () => {
-  for (const [pathname, search, hash, expected] of CASES) {
-    assert.equal(legacyProjectUrl(pathname, search, hash), expected, pathname)
-  }
-})
-
-test('the 404 page script redirects exactly like legacyProjectUrl', () => {
-  const script = legacyRedirectScript()
-  for (const [pathname, search, hash, expected] of CASES) {
-    let replaced = null
-    const location = {
-      pathname,
-      search,
-      hash,
-      replace: (url) => {
-        replaced = url
-      },
+test('redirects every moved project site root to chrastina.dev', () => {
+  const redirects = legacyRedirects()
+  assert.equal(
+    redirects.length,
+    LEGACY_PROJECT_SITES.length + LEGACY_DEEP_LINKS.length
+  )
+  assert.deepEqual(
+    redirects.find((r) => r.fromPath === '/ckeditor-shadow-showcase/'),
+    {
+      fromPath: '/ckeditor-shadow-showcase/',
+      toPath: 'https://chrastina.dev/ckeditor-shadow-showcase/',
+      isPermanent: true,
     }
-    vm.runInNewContext(script, { location })
-    assert.equal(replaced, expected, pathname)
+  )
+})
+
+test('keeps the path of a deep link', () => {
+  assert.ok(
+    legacyRedirects().some(
+      (r) =>
+        r.fromPath === '/kontent-custom-element-samples/gallery/' &&
+        r.toPath ===
+          'https://chrastina.dev/kontent-custom-element-samples/gallery/'
+    )
+  )
+})
+
+test('every path has a trailing slash, as GitHub Pages serves them', () => {
+  // the plugin writes <fromPath>/index.html, reached at the slashed URL
+  for (const { fromPath } of legacyRedirects()) {
+    assert.match(fromPath, /^\/.+\/$/, fromPath)
   }
 })
 
-test('the redirect pages never collide with the site sections', () => {
-  const { SECTIONS } = require('../src/utils/paths')
+test('the redirects never collide with the site sections', () => {
   const sections = Object.values(SECTIONS).map((s) => s.segment)
   for (const repo of LEGACY_PROJECT_SITES) {
     assert.ok(!sections.includes(repo.toLowerCase()), repo)
   }
-})
-
-test('writes one redirect page per moved project site', () => {
-  const pages = buildRedirectPages()
-  assert.equal(pages.length, LEGACY_PROJECT_SITES.length)
-  const page = pages.find((p) => p.path === 'public/Home/index.html')
-  assert.ok(
-    page.html.includes(
-      '<link rel="canonical" href="https://chrastina.dev/Home/">'
-    )
-  )
-  assert.ok(
-    page.html.includes(
-      '<meta http-equiv="refresh" content="0; url=https://chrastina.dev/Home/">'
-    )
-  )
-})
-
-test('escapes the target in the redirect page markup', () => {
-  const html = buildRedirectPage('https://chrastina.dev/a"b/')
-  assert.ok(html.includes('href="https://chrastina.dev/a&quot;b/"'))
-  assert.ok(!html.includes('href="https://chrastina.dev/a"b/"'))
 })
