@@ -2020,6 +2020,56 @@ This site is written using [Gatsby](https://gatsbyjs.com) as a frontend framewor
 
 ---
 
+# Teach the AI Agents Well
+
+- URL: https://ondrej.chrastina.dev/talks/teach-the-ai-agents-well-ai-poland-2026/
+- Published: 2026-11-19
+- Updated: 2026-11-16
+- Section: Talks
+- Slides: https://ondrej.chrastina.dev/slides/teach-the-ai-agents-well-ai-poland-2026.pdf
+- Recording: https://www.youtube.com/watch?v=0TcuEyjwlQE
+
+Pre-recorded talk at AI Poland 2026, the AI day of the NG Poland / JS Poland / AI Poland week in Warsaw: why coding agents are confidently wrong about your product, the three steps CKEditor shipped to fix it (readable docs, a docs MCP server, an installable skill), and a Drupal skill proved with an eval.
+
+## What the session covered
+
+Ask a coding agent to "add CKEditor to my Next.js app" with no hints and it hands you a confident scaffold with a deprecated build method, no license key, and an import path that no longer exists. Training data goes stale the moment it is collected, and agents do not know what they do not know. The thesis of this 20-minute talk: don't let agents guess, give them a way to find out, and prove that it works.
+
+-   **Readable docs.** A markdown twin of every docs page (swap `.html` for `.md`, or ask the same URL with `Accept: text/markdown`), `llms.txt` as the index and `llms-full.txt` as all docs in one file. No infrastructure, just a rendering path: the one everyone should already have.
+-   **A hosted docs MCP server.** One line (`claude mcp add --transport http ckeditor5 https://ckeditor5.mcp.kapa.ai`) gives the agent semantic search over the live docs, with version-current answers and source links. We bought the layer on Kapa.ai instead of building it, and the talk lists both off-the-shelf options and the SDKs to build your own.
+-   **An installable skill.** Docs say what is true, a skill says what to do. `npx skills add ckeditor/skills`, the anatomy of a `SKILL.md` with references, and where to publish one: skills.sh, a public repository, or a Claude Code plugin marketplace.
+-   **You don't have to own the product.** I contributed a CKEditor skill to Drupal's shared `ai_best_practices` repository as a contributor, not a maintainer, at the DrupalCon Rotterdam contribution day. The same works for your own project's practices.
+-   **Proving a skill works.** Six real developer requests, each run three times without the skill and three times with it, scored by 21 static checks and 6 behavioral cases.
+
+## The result
+
+-   **83% vs 39%** success rate with the skill vs without it, from my own eval run (said on screen, not hidden).
+-   **23% less time** per answer (144 s to 111 s) and **10% lower cost** per answer ($0.18 to $0.16).
+-   The dark side: evals cost tokens. One A/B run is 36 agent calls, about 1.4M tokens and $2.33, and every skill change means another run.
+
+## Your agent-readiness checklist
+
+-   Ask an agent to set up your product with no hints, and write down what it gets wrong.
+-   Serve a `.md` twin of every docs page, honor `Accept: text/markdown`, publish `llms.txt`.
+-   Offer a docs MCP server: Kapa.ai, Mintlify, GitMCP, or build one with the MCP SDKs.
+-   Ship a skill (`SKILL.md` plus references) on skills.sh or in a public repository.
+-   Prove it with an eval: the same tasks with and without the skill, and budget the tokens.
+-   Not your product? Contribute the skill upstream, or write one for your own project.
+
+## The venue
+
+[AI Poland 2026](https://ai-poland.pl/speaker/2026/ondrej-chrastina), Thursday, November 19, the AI day of the NG Poland / JS Poland / AI Poland conference week at Multikino Złote Tarasy in Warsaw, hybrid. Mine was a pre-recorded session, on demand for attendees during the whole week, so I joined online. Thanks to Dariusz Kalbarczyk for the invite. The CKEditor half builds on our September webinar with Marcin Burek, and the longer cut of the same story is my [Pimcore Community Dev Days talk](https://ondrej.chrastina.dev/talks/ai-best-practices-for-your-product-pcdd-2026/).
+
+## Resources
+
+-   [Slides (PDF)](https://ondrej.chrastina.dev/slides/teach-the-ai-agents-well-ai-poland-2026.pdf)
+-   [Using CKEditor with AI coding agents](https://ckeditor.com/docs/ckeditor5/latest/getting-started/ai-coding-agents.html) and [CKEditor skills](https://github.com/ckeditor/skills)
+-   [Demo repository: from nothing to a working install](https://github.com/ckeditor/devrel-ckeditor-ai-coding-agents-demo) and [its project page](https://ondrej.chrastina.dev/projects/devrel-ckeditor-ai-coding-agents-demo/)
+-   [The in-depth webinar: Less time, fewer tokens, better effects](https://ondrej.chrastina.dev/talks/less-time-fewer-tokens-better-effects-ckeditor-ai-coding-agents/)
+-   [Drupal skill and evals, merge request !105](https://git.drupalcode.org/project/ai_best_practices/-/merge_requests/105)
+
+---
+
 # AI Best Practices for Your Product
 
 - URL: https://ondrej.chrastina.dev/talks/ai-best-practices-for-your-product-pcdd-2026/
