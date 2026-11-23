@@ -1,5 +1,6 @@
 import React from 'react'
 import Layout from '../components/layout'
+import { legacyRedirectScript } from '../utils/legacy-redirects'
 
 const NotFoundPage = () => (
   <Layout>
@@ -12,6 +13,12 @@ const NotFoundPage = () => (
       </section>
     </div>
   </Layout>
+)
+
+// Old project site links (ondrej.chrastina.dev/<repo>/...) land here once the
+// path is below a redirect page, see src/utils/legacy-redirects.js
+export const Head = () => (
+  <script dangerouslySetInnerHTML={{ __html: legacyRedirectScript() }} />
 )
 
 export default NotFoundPage

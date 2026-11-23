@@ -11,6 +11,7 @@ const path = require('path')
 const { parsePath } = require('gatsby')
 const fs = require('fs')
 const { pathFor } = require('./src/utils/paths')
+const { buildRedirectPages } = require('./lib/legacy-redirects')
 const {
   buildRobotsTxt,
   buildLlmsTxt,
@@ -505,4 +506,13 @@ exports.onPostBuild = async ({ graphql, reporter }) => {
   fs.writeFileSync('./public/llms.txt', buildLlmsTxt(siteContent))
   fs.writeFileSync('./public/llms-full.txt', buildLlmsFullTxt(siteContent))
   reporter.info('Wrote robots.txt, llms.txt, and llms-full.txt')
+
+  const redirectPages = buildRedirectPages()
+  for (const page of redirectPages) {
+    fs.mkdirSync(path.dirname(page.path), { recursive: true })
+    fs.writeFileSync(page.path, page.html)
+  }
+  reporter.info(
+    `Wrote ${redirectPages.length} redirect pages for project sites moved to chrastina.dev`
+  )
 }
