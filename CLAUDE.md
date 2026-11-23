@@ -44,7 +44,7 @@ Copy `.env.template` to `.env` and configure:
 - `src/components/RichTextImage.js` - Rich text images, wrapped in `<figure class="rich-text-image">` with a paragraph's bottom margin (Kontent's own figure markup is dropped by the renderer)
 - `src/utils/paths.js` - Single source of truth for section URLs (see below)
 - `src/utils/video.js` - `youtubeEmbedUrl` (tested) turns a talk's `recording_url` (watch, youtu.be, shorts, live, embed links, and playlists as a `videoseries` player) into a privacy-enhanced `youtube-nocookie.com` embed URL, `null` for anything else. `talk-item.js` renders it as a lazy 16:9 iframe (`.video-embed`, `components/_video-embed.scss`, tested in `tests/styles.test.js`) above the content; other recordings keep only the Recording button
-- `src/utils/seo.js` - Site constants, author profile, page descriptions, full page title overrides (`PAGE_TITLES`, passed as `seo.fullTitle`, used without the " | <site title>" suffix), text normalization for meta tags
+- `src/utils/seo.js` - Site constants, page descriptions, full page title overrides (`PAGE_TITLES`, passed as `seo.fullTitle`, used without the " | <site title>" suffix), text normalization for meta tags, and the Person JSON-LD builder (see below)
 - `src/utils/sitemap.js` - `lastmod` per sitemap URL (`gatsby-plugin-sitemap` `resolvePages`): item pages use their Kontent `last_modified`, listings the newest item they list, home the newest on the site
 - `lib/` - Builders for `robots.txt`, `llms.txt`, `llms-full.txt` and the rich text to markdown export (run in `gatsby-node.js` `onPostBuild`)
 - `src/components/ListingHighlights.js` - Listing highlights, the home page sections (Landing page type). Content: the Home page `sections` linked items of type **Listing highlight** in Kontent (title, summary, image, item types via the type selector custom element, item count, link label, link target). `src/utils/highlights.js` (`highlightsFrom`, tested) picks the newest items of the chosen types with `site.buildTime` as the cutoff (never the browser clock, that would break hydration), and drops the "See all" link when its label or target is empty. No highlights, nothing renders. Styles: `.listing-highlights` in `_tiles.scss`, accent by position (`listing-highlight-accent-1` to `-6`), stripe on the text side (tested in `tests/styles.test.js`). Showcase: `/style-guide/listing-highlights`. The type is also declared in `gatsby-node.js` (`createSchemaCustomization`) because the Kontent source plugin caches content types and a stale build cache (Netlify) would not know a new type; when you add a content type the code queries, declare it there too (tested in `tests/schema.test.js`)
@@ -60,6 +60,17 @@ Copy `.env.template` to `.env` and configure:
 - `SECTIONS[type].heading`: display name (RSS categories, `llms.txt` headings)
 
 It is used for page creation (`gatsby-node.js`), the sitemap and RSS (`gatsby-config.js`), `lib/`, rich text buttons, listing tiles, "Back to" buttons and the page description keys. Always link with the trailing slash: GitHub Pages answers `/talks/<slug>` with a 301. The listing pages' own URLs come from the Kontent navigation items and must match `SECTIONS`.
+
+### Person JSON-LD: CMS only
+
+The Person node (`@id` `https://ondrej.chrastina.dev/#person`, on every page via `layout.js`) is built by `buildPerson()` in `src/utils/seo.js` from Kontent only, never from values in code:
+
+- the **Person** content group of the Layout item `default_layout`: `person_name`, `person_job_title`, `person_description`, `person_photo`, `person_affiliation` (a `link` item: text = organization name, URL), `person_address_locality`, `person_address_country`, `person_knows_about` (`keyword` items)
+- `sameAs` = the footer `social_media_accounts`, in footer order, deduped by `buildSameAs()`. A new profile is a new social media account in the footer.
+
+The first five fields are required: `buildPerson()` throws and the build fails when one is empty. Optional fields are left out of the JSON-LD when empty. The WebSite node reuses `person_description`.
+
+Footer icons: a social media type with an `account_icon_code` renders the Font Awesome 5 glyph. Without one (Bluesky, HackerNoon, the CKEditor blog), `Footer.js` renders its `account_icon` asset as the background of the icon circle (`.icon.icon-asset`, `--icon-url`). Upload those icons as PNG (the Kontent plan rejects SVG), drawn in the palette `bg` color `#242943` on a transparent background.
 
 ### Content Models (from Kontent.ai)
 - Navigation Items (hierarchical, support external URLs)
@@ -77,5 +88,7 @@ It is used for page creation (`gatsby-node.js`), the sitemap and RSS (`gatsby-co
 ## Deployment
 
 GitHub Actions (`.github/workflows/build-and-publish.yml`) builds on push to `source` branch and deploys to `master` branch for GitHub Pages. Requires `KONTENT_PROJECT_ID` and `KONTENT_LANGUAGE_CODENAMES` secrets.
+
+**After a Kontent content model change** (new type or element), clear the Netlify build cache: in Netlify, Deploys, "Clear cache and deploy site", then "Retry with latest branch commit" on the PR preview. `@kontent-ai/gatsby-source` caches the content types in the Gatsby cache (`loadAllKontentTypesCached`) and never refreshes them, so a cached Netlify build fails with `Cannot query field "<new element>"`. GitHub Actions starts without a cache, so the GitHub Pages build is not affected.
 
 The repo is `Simply007/ondrej.chrastina.dev`, a project site with its own custom domain (`src/CNAME`). It is not the GitHub user site: `Simply007/Simply007.github.io` is the `chrastina.dev` landing page, so every other repo with GitHub Pages is served at `chrastina.dev/<repo>/`. Those project sites lived at `ondrej.chrastina.dev/<repo>/` until November 2026; `src/utils/legacy-redirects.js` (tested) lists them and the deeper links the content uses; `gatsby-node.js` passes them to `createRedirect`, and `gatsby-plugin-meta-redirect` writes each as a meta refresh page. Never create a page or section whose path is one of those repo names.
