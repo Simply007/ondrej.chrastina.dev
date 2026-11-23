@@ -61,7 +61,7 @@ test('a social media type without a Font Awesome code renders its Account Icon a
   assert.match(html, /aria-label="Bluesky"/)
 })
 
-test('every social icon shows its label as a hover tooltip', () => {
+test('every social icon shows "Label: @handle" as a hover tooltip', () => {
   const html = render(
     Footer,
     footer([
@@ -79,8 +79,18 @@ test('every social icon shows its label as a hover tooltip', () => {
           value: [{ url: 'https://assets.example/hackernoon.png' }],
         },
       }),
+      // Medium keeps the @ in the handle itself (medium.com/%s)
+      account('@Simply007', {
+        label: { value: 'Medium' },
+        account_pattern: { value: 'https://medium.com/%s' },
+        account_icon_code: { value: 'fa-medium' },
+        account_icon: { value: [] },
+      }),
     ])
   )
-  assert.match(html, /title="GitHub"/)
-  assert.match(html, /title="HackerNoon"/)
+  assert.match(html, /title="GitHub: @Simply007"/)
+  assert.match(html, /title="HackerNoon: @simply007"/)
+  assert.match(html, /title="Medium: @Simply007"/)
+  // the accessible name stays the plain label
+  assert.match(html, /aria-label="Medium"/)
 })
