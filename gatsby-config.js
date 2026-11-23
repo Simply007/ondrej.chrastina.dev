@@ -301,5 +301,7 @@ module.exports = {
     'gatsby-plugin-image',
     `gatsby-plugin-sharp`,
     `gatsby-transformer-sharp`,
+    // writes createRedirect redirects as meta refresh pages (GitHub Pages has no 301)
+    'gatsby-plugin-meta-redirect',
   ],
 }

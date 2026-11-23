@@ -18,7 +18,7 @@ npm test           # Unit tests (node:test, tests/**/*.test.js), no build needed
 
 Husky pre-commit hook automatically runs `npm run format`. Tests cover the pure helpers in `src/utils/` and `lib/`; CI (`.github/workflows/build-and-publish.yml`) runs `npm test` before the build, so a failing test blocks the deploy.
 
-**Every fix requires a test** that reproduces the bug (fails before the fix, passes after), in the same commit. Pure logic goes into helpers in `src/utils/` or `lib/`. Components can be rendered in tests with `tests/helpers/render-component.js` (esbuild transforms the JSX, `react-dom/server` renders it, Gatsby's `Link` is stubbed and throws without a destination); see `tests/listing-item.test.js`.
+**Every fix requires a test** that reproduces the bug (fails before the fix, passes after), in the same commit. Pure logic goes into helpers in `src/utils/` or `lib/`. Components can be rendered in tests with `tests/helpers/render-component.js` (esbuild transforms the JSX, `react-dom/server` renders it, Gatsby's `Link` is stubbed and throws without a destination); see `tests/listing-item.test.js`. Style regressions can be tested by compiling `main.scss` with `sass` (dev dependency), see `tests/styles.test.js`. Rules for blocks inside the page wrapper must outrank `#wrapper > * > * > .inner` (scope them under `#wrapper`).
 
 ## Environment Setup
 
@@ -41,10 +41,13 @@ Copy `.env.template` to `.env` and configure:
 - `src/templates/` - Page templates (home.js, sections-page.js, listing-page.js, journal-item.js, project-item.js, talk-item.js)
 - `src/components/layout.js` - Main layout wrapper (class component with sidebar menu state)
 - `src/components/RichText.js` - Rich text rendering with code highlighting and custom element resolvers
+- `src/components/RichTextImage.js` - Rich text images, wrapped in `<figure class="rich-text-image">` with a paragraph's bottom margin (Kontent's own figure markup is dropped by the renderer)
 - `src/utils/paths.js` - Single source of truth for section URLs (see below)
-- `src/utils/seo.js` - Site constants, author profile, page descriptions, text normalization for meta tags
+- `src/utils/video.js` - `youtubeEmbedUrl` (tested) turns a talk's `recording_url` (watch, youtu.be, shorts, live, embed links, and playlists as a `videoseries` player) into a privacy-enhanced `youtube-nocookie.com` embed URL, `null` for anything else. `talk-item.js` renders it as a lazy 16:9 iframe (`.video-embed`, `components/_video-embed.scss`, tested in `tests/styles.test.js`) above the content; other recordings keep only the Recording button
+- `src/utils/seo.js` - Site constants, author profile, page descriptions, full page title overrides (`PAGE_TITLES`, passed as `seo.fullTitle`, used without the " | <site title>" suffix), text normalization for meta tags
 - `src/utils/sitemap.js` - `lastmod` per sitemap URL (`gatsby-plugin-sitemap` `resolvePages`): item pages use their Kontent `last_modified`, listings the newest item they list, home the newest on the site
 - `lib/` - Builders for `robots.txt`, `llms.txt`, `llms-full.txt` and the rich text to markdown export (run in `gatsby-node.js` `onPostBuild`)
+- `src/components/ListingHighlights.js` - Listing highlights, the home page sections (Landing page type). Content: the Home page `sections` linked items of type **Listing highlight** in Kontent (title, summary, image, item types via the type selector custom element, item count, link label, link target). `src/utils/highlights.js` (`highlightsFrom`, tested) picks the newest items of the chosen types with `site.buildTime` as the cutoff (never the browser clock, that would break hydration), and drops the "See all" link when its label or target is empty. No highlights, nothing renders. Styles: `.listing-highlights` in `_tiles.scss`, accent by position (`listing-highlight-accent-1` to `-6`), stripe on the text side (tested in `tests/styles.test.js`). Showcase: `/style-guide/listing-highlights`. The type is also declared in `gatsby-node.js` (`createSchemaCustomization`) because the Kontent source plugin caches content types and a stale build cache (Netlify) would not know a new type; when you add a content type the code queries, declare it there too (tested in `tests/schema.test.js`)
 - `src/assets/scss/` - SCSS styling with custom 12-column CSS Grid implementation
 
 ### URL paths: one source of truth
@@ -74,3 +77,5 @@ It is used for page creation (`gatsby-node.js`), the sitemap and RSS (`gatsby-co
 ## Deployment
 
 GitHub Actions (`.github/workflows/build-and-publish.yml`) builds on push to `source` branch and deploys to `master` branch for GitHub Pages. Requires `KONTENT_PROJECT_ID` and `KONTENT_LANGUAGE_CODENAMES` secrets.
+
+The repo is `Simply007/ondrej.chrastina.dev`, a project site with its own custom domain (`src/CNAME`). It is not the GitHub user site: `Simply007/Simply007.github.io` is the `chrastina.dev` landing page, so every other repo with GitHub Pages is served at `chrastina.dev/<repo>/`. Those project sites lived at `ondrej.chrastina.dev/<repo>/` until November 2026; `src/utils/legacy-redirects.js` (tested) lists them and the deeper links the content uses; `gatsby-node.js` passes them to `createRedirect`, and `gatsby-plugin-meta-redirect` writes each as a meta refresh page. Never create a page or section whose path is one of those repo names.
