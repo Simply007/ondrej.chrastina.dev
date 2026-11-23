@@ -24,6 +24,7 @@ const Footer = (props) => {
                 : undefined
             }
             aria-label={mediaType.elements.label.value}
+            title={mediaType.elements.label.value}
           >
             <span className="label">{mediaType.elements.label.value}</span>
           </a>

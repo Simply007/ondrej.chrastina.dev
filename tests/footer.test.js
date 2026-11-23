@@ -60,3 +60,27 @@ test('a social media type without a Font Awesome code renders its Account Icon a
   )
   assert.match(html, /aria-label="Bluesky"/)
 })
+
+test('every social icon shows its label as a hover tooltip', () => {
+  const html = render(
+    Footer,
+    footer([
+      account('Simply007', {
+        label: { value: 'GitHub' },
+        account_pattern: { value: 'https://github.com/%s' },
+        account_icon_code: { value: 'fa-github' },
+        account_icon: { value: [] },
+      }),
+      account('simply007', {
+        label: { value: 'HackerNoon' },
+        account_pattern: { value: 'https://hackernoon.com/u/%s' },
+        account_icon_code: { value: '' },
+        account_icon: {
+          value: [{ url: 'https://assets.example/hackernoon.png' }],
+        },
+      }),
+    ])
+  )
+  assert.match(html, /title="GitHub"/)
+  assert.match(html, /title="HackerNoon"/)
+})
