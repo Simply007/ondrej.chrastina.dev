@@ -1887,10 +1887,10 @@ The core of the implementation is the [Root pipeline](https://github.com/Kentico
 
 - URL: https://ondrej.chrastina.dev/projects/ondrej-chrastina-dev/
 - Published: 2020-08-22
-- Updated: 2025-02-13
+- Updated: 2026-11-23
 - Section: Projects
 - Live: https://ondrej.chrastina.dev
-- Source code: https://github.com/Simply007/Simply007.github.io
+- Source code: https://github.com/Simply007/ondrej.chrastina.dev
 
 My personal website build with Gatsby and Kentico Kontent as a data source.
 
