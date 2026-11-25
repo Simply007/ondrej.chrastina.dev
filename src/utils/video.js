@@ -42,4 +42,30 @@ const youtubeEmbedUrl = (url) => {
   return list ? `${EMBED_BASE}videoseries?list=${list}` : null
 }
 
-module.exports = { youtubeId, youtubePlaylistId, youtubeEmbedUrl }
+/**
+ * schema.org VideoObject for a talk recording on YouTube, with the fields
+ * Google needs for video results (name, thumbnailUrl, uploadDate). Anything
+ * else (playlists, other hosts, no date) returns undefined: an incomplete
+ * VideoObject only produces Search Console errors.
+ * @param {Object} args
+ * @param {String} args.name - talk title
+ * @param {String} args.description - plain-text summary, the name when empty
+ * @param {String} args.url - recording URL
+ * @param {String} args.uploadDate - ISO date, the talk's release date
+ * @returns {Object|undefined}
+ */
+const videoObject = ({ name, description, url, uploadDate }) => {
+  const id = youtubeId(url || '')
+  if (!id || !uploadDate) return undefined
+  return {
+    '@type': 'VideoObject',
+    name,
+    description: description || name,
+    thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+    uploadDate,
+    contentUrl: `https://www.youtube.com/watch?v=${id}`,
+    embedUrl: `https://www.youtube.com/embed/${id}`,
+  }
+}
+
+module.exports = { youtubeId, youtubePlaylistId, youtubeEmbedUrl, videoObject }

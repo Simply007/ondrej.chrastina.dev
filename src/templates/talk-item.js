@@ -5,7 +5,7 @@ import BannerLanding from '../components/BannerLanding'
 import RichText from '../components/RichText'
 import { SITE_URL, PERSON_ID, stripHtml } from '../utils/seo'
 import { sectionPath } from '../utils/paths'
-import { youtubeEmbedUrl } from '../utils/video'
+import { youtubeEmbedUrl, videoObject } from '../utils/video'
 
 const TalkItem = ({ data: { kontentItemTalk }, location }) => {
   const elements = kontentItemTalk.elements
@@ -36,13 +36,12 @@ const TalkItem = ({ data: { kontentItemTalk }, location }) => {
             elements.recording_url.value,
             elements.slides_url.value,
           ].filter(Boolean),
-          associatedMedia: elements.recording_url.value
-            ? {
-                '@type': 'VideoObject',
-                name: elements.title.value,
-                contentUrl: elements.recording_url.value,
-              }
-            : undefined,
+          associatedMedia: videoObject({
+            name: elements.title.value,
+            description,
+            url: elements.recording_url.value,
+            uploadDate: elements.release_date.value,
+          }),
           author: { '@id': PERSON_ID },
           inLanguage: 'en',
         },
