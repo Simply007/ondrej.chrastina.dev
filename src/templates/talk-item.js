@@ -3,11 +3,12 @@ import { graphql, Link } from 'gatsby'
 import Layout from '../components/layout'
 import BannerLanding from '../components/BannerLanding'
 import RichText from '../components/RichText'
+import RelatedItems from '../components/RelatedItems'
 import { SITE_URL, PERSON_ID, stripHtml } from '../utils/seo'
 import { sectionPath } from '../utils/paths'
 import { youtubeEmbedUrl } from '../utils/video'
 
-const TalkItem = ({ data: { kontentItemTalk }, location }) => {
+const TalkItem = ({ data: { kontentItemTalk }, location, pageContext }) => {
   const elements = kontentItemTalk.elements
   const description = stripHtml(elements.summary.value)
   const image =
@@ -130,6 +131,7 @@ const TalkItem = ({ data: { kontentItemTalk }, location }) => {
             <RichText element={kontentItemTalk.elements.content} />
           </div>
         </section>
+        <RelatedItems items={pageContext.related} />
       </div>
     </Layout>
   )

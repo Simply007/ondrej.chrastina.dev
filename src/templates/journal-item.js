@@ -3,10 +3,15 @@ import { graphql } from 'gatsby'
 import Layout from '../components/layout'
 import BannerLanding from '../components/BannerLanding'
 import RichText from '../components/RichText'
+import RelatedItems from '../components/RelatedItems'
 import { SITE_URL, PERSON_ID, stripHtml } from '../utils/seo'
 import { sectionPath } from '../utils/paths'
 
-const JournalItem = ({ data: { kontentItemGotcha }, location }) => {
+const JournalItem = ({
+  data: { kontentItemGotcha },
+  location,
+  pageContext,
+}) => {
   const elements = kontentItemGotcha.elements
   const description = stripHtml(elements.summary.value)
   const image =
@@ -57,6 +62,7 @@ const JournalItem = ({ data: { kontentItemGotcha }, location }) => {
             <RichText element={kontentItemGotcha.elements.content} />
           </div>
         </section>
+        <RelatedItems items={pageContext.related} />
       </div>
     </Layout>
   )
