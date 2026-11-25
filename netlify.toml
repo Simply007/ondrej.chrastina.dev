@@ -1,0 +1,8 @@
+# Netlify only builds the PR previews; the live site is GitHub Pages
+# (ondrej.chrastina.dev). Netlify's production URL, chrastina.netlify.app,
+# serves a full copy of the site, so keep every Netlify page out of search
+# results. GitHub Pages ignores this file.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
