@@ -668,53 +668,53 @@ const Elements = (props) => (
 
               <h4>Fit</h4>
               <span className="image fit">
-                <img src={pic03} alt="" />
+                <img src={pic03} alt="Style guide sample image" />
               </span>
               <div className="box alt">
                 <div className="grid-wrapper">
                   <div className="col-4">
                     <span className="image fit">
-                      <img src={pic08} alt="" />
+                      <img src={pic08} alt="Style guide sample image" />
                     </span>
                   </div>
                   <div className="col-4">
                     <span className="image fit">
-                      <img src={pic09} alt="" />
+                      <img src={pic09} alt="Style guide sample image" />
                     </span>
                   </div>
                   <div className="col-4">
                     <span className="image fit">
-                      <img src={pic10} alt="" />
+                      <img src={pic10} alt="Style guide sample image" />
                     </span>
                   </div>
                   <div className="col-4">
                     <span className="image fit">
-                      <img src={pic10} alt="" />
+                      <img src={pic10} alt="Style guide sample image" />
                     </span>
                   </div>
                   <div className="col-4">
                     <span className="image fit">
-                      <img src={pic08} alt="" />
+                      <img src={pic08} alt="Style guide sample image" />
                     </span>
                   </div>
                   <div className="col-4">
                     <span className="image fit">
-                      <img src={pic09} alt="" />
+                      <img src={pic09} alt="Style guide sample image" />
                     </span>
                   </div>
                   <div className="col-4">
                     <span className="image fit">
-                      <img src={pic09} alt="" />
+                      <img src={pic09} alt="Style guide sample image" />
                     </span>
                   </div>
                   <div className="col-4">
                     <span className="image fit">
-                      <img src={pic10} alt="" />
+                      <img src={pic10} alt="Style guide sample image" />
                     </span>
                   </div>
                   <div className="col-4">
                     <span className="image fit">
-                      <img src={pic08} alt="" />
+                      <img src={pic08} alt="Style guide sample image" />
                     </span>
                   </div>
                 </div>
@@ -723,7 +723,7 @@ const Elements = (props) => (
               <h4>Left &amp; Right</h4>
               <p>
                 <span className="image left">
-                  <img src={pic09} alt="" />
+                  <img src={pic09} alt="Style guide sample image" />
                 </span>
                 Lorem ipsum dolor sit accumsan interdum nisi, quis tincidunt
                 felis sagittis eget. tempus euismod. Vestibulum ante ipsum
@@ -739,7 +739,7 @@ const Elements = (props) => (
               </p>
               <p>
                 <span className="image right">
-                  <img src={pic10} alt="" />
+                  <img src={pic10} alt="Style guide sample image" />
                 </span>
                 Lorem ipsum dolor sit accumsan interdum nisi, quis tincidunt
                 felis sagittis eget. tempus euismod. Vestibulum ante ipsum

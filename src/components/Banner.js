@@ -1,7 +1,9 @@
 import React from 'react'
 import { ImageElement } from '@kontent-ai/gatsby-components'
+import { imageAlt } from '../utils/image-alt'
 
 const Banner = (props) => {
+  const heading = props.data.elements.primary_text.value
   const actions = props.data.elements.cta.value.map((cta) => (
     <li key={cta.elements.external_url.value}>
       <a href={cta.elements.external_url.value} className="button next scrolly">
@@ -21,6 +23,7 @@ const Banner = (props) => {
       {props.data.elements.hero_image.value.length > 0 && (
         <ImageElement
           image={props.data.elements.hero_image.value[0]}
+          alt={imageAlt(props.data.elements.hero_image.value[0], heading)}
           layout="fullWidth"
           loading="eager"
           style={{
@@ -43,6 +46,10 @@ const Banner = (props) => {
           >
             <ImageElement
               image={props.data.elements.profile_photo.value[0]}
+              alt={imageAlt(
+                props.data.elements.profile_photo.value[0],
+                heading
+              )}
               layout="fixed"
               width={150}
               height={150}

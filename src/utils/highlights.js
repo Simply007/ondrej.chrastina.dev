@@ -1,5 +1,6 @@
 // CJS so the node test runner can require it
 const { latestReleased } = require('./latest')
+const { imageAlt } = require('./image-alt')
 
 const HIGHLIGHT_TYPENAME = 'kontent_item_listing_highlight'
 
@@ -71,7 +72,7 @@ const highlightsFrom = (sections, pools, cutoff) =>
         title: elements.title.value,
         summary: elements.summary.value,
         photo: image.url,
-        photoAlt: image.description || '',
+        photoAlt: imageAlt(image, elements.title.value),
         items: pickItems(
           pools,
           parseItemTypes(elements.item_types.value),

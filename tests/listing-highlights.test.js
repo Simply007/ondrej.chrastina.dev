@@ -42,6 +42,13 @@ test('a home section shows its title, the newest items and a See all link', () =
   assert.match(html, /href="\/talks\/"[^>]*>See all talks →<\/a>/)
 })
 
+// Bing Webmaster Tools reported the thumbnails' alt="" as missing alt text
+test('an item thumbnail has the item title as alt text', () => {
+  const html = render(ListingHighlights, { highlights: [highlight] })
+  assert.match(html, /a\.jpg\?w=192&amp;h=120&amp;fit=crop" alt="Talk a"/)
+  assert.doesNotMatch(html, /alt=""/)
+})
+
 test('the section title is plain text, not a link', () => {
   const html = render(ListingHighlights, { highlights: [highlight] })
   assert.doesNotMatch(html, /<h2><a/)

@@ -127,7 +127,10 @@ const TalkItem = ({ data: { kontentItemTalk }, location }) => {
         )}
         <section>
           <div className="inner" data-kontent-element-codename="content">
-            <RichText element={kontentItemTalk.elements.content} />
+            <RichText
+              element={kontentItemTalk.elements.content}
+              title={kontentItemTalk.elements.title.value}
+            />
           </div>
         </section>
       </div>

@@ -21,7 +21,7 @@ const ContentItemButton = ({ item, iconCode, title }) => {
   )
 }
 
-const RichText = ({ element }) => (
+const RichText = ({ element, title }) => (
   <RichTextElement
     value={element.value}
     linkedItems={element.modular_content}
@@ -107,7 +107,9 @@ const RichText = ({ element }) => (
       }
     }}
     images={element.images}
-    resolveImage={(image) => <RichTextImage image={image} />}
+    resolveImage={(image) => (
+      <RichTextImage image={image} fallbackAlt={title} />
+    )}
   />
 )
 

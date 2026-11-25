@@ -54,7 +54,10 @@ const JournalItem = ({ data: { kontentItemGotcha }, location }) => {
       >
         <section>
           <div className="inner" data-kontent-element-codename="content">
-            <RichText element={kontentItemGotcha.elements.content} />
+            <RichText
+              element={kontentItemGotcha.elements.content}
+              title={kontentItemGotcha.elements.title.value}
+            />
           </div>
         </section>
       </div>

@@ -31,7 +31,7 @@ const highlights = [
     title: 'I speak',
     summary: 'Section summary: one short sentence about the talks.',
     photo: pic01,
-    photoAlt: '',
+    photoAlt: 'I speak',
     items: [
       item(
         'kontent_item_talk',
@@ -62,7 +62,7 @@ const highlights = [
     title: 'I Code',
     summary: 'Section summary: one short sentence about the projects.',
     photo: pic05,
-    photoAlt: '',
+    photoAlt: 'I code',
     items: [
       item(
         'kontent_item_project',
@@ -93,7 +93,7 @@ const highlights = [
     title: 'I write',
     summary: 'Section summary: one short sentence about the journal.',
     photo: pic03,
-    photoAlt: '',
+    photoAlt: 'I write',
     items: [
       item(
         'kontent_item_gotcha',

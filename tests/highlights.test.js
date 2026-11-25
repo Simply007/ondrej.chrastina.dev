@@ -106,3 +106,27 @@ test('highlightsFrom maps listing highlights and skips other linked types', () =
 test('no linked sections gives no highlights', () => {
   assert.deepEqual(highlightsFrom(null, pools, BUILD), [])
 })
+
+// Bing Webmaster Tools reported the empty alt of photos without a description
+test('a highlight photo without a description gets the title as alt', () => {
+  const [h] = highlightsFrom(
+    [
+      {
+        __typename: 'kontent_item_listing_highlight',
+        system: { codename: 'listing_highlight_i_speak' },
+        elements: {
+          title: { value: 'I speak' },
+          summary: { value: 'Talks.' },
+          image: { value: [{ url: 'https://a/x.jpg', description: '' }] },
+          item_types: { value: '[{"codename":"talk"}]' },
+          item_count: { value: 3 },
+          link_label: { value: '' },
+          link_target: { value: [] },
+        },
+      },
+    ],
+    pools,
+    BUILD
+  )
+  assert.equal(h.photoAlt, 'I speak')
+})
