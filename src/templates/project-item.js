@@ -3,10 +3,15 @@ import { graphql, Link } from 'gatsby'
 import Layout from '../components/layout'
 import BannerLanding from '../components/BannerLanding'
 import RichText from '../components/RichText'
+import RelatedItems from '../components/RelatedItems'
 import { SITE_URL, PERSON_ID, stripHtml } from '../utils/seo'
 import { sectionPath } from '../utils/paths'
 
-const ProjectItem = ({ data: { kontentItemProject }, location }) => {
+const ProjectItem = ({
+  data: { kontentItemProject },
+  location,
+  pageContext,
+}) => {
   const elements = kontentItemProject.elements
   const description = stripHtml(elements.summary.value)
   const image =
@@ -100,6 +105,7 @@ const ProjectItem = ({ data: { kontentItemProject }, location }) => {
             <RichText element={kontentItemProject.elements.content} />
           </div>
         </section>
+        <RelatedItems items={pageContext.related} />
       </div>
     </Layout>
   )

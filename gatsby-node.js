@@ -12,6 +12,7 @@ const { parsePath } = require('gatsby')
 const fs = require('fs')
 const { pathFor } = require('./src/utils/paths')
 const { legacyRedirects } = require('./src/utils/legacy-redirects')
+const { relatedItems } = require('./src/utils/related')
 const {
   buildRobotsTxt,
   buildLlmsTxt,
@@ -187,6 +188,17 @@ exports.createPages = async ({ graphql, actions }) => {
             url_slug {
               value
             }
+            title {
+              value
+            }
+            post_date {
+              value
+            }
+            listing_category {
+              value {
+                codename
+              }
+            }
           }
           system {
             codename
@@ -196,17 +208,6 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     }
   `)
-
-  gotchas.allKontentItemGotcha.nodes.forEach((journalItem) =>
-    createPage({
-      path: pathFor('gotcha', journalItem.elements.url_slug.value),
-      component: require.resolve('./src/templates/journal-item.js'),
-      context: {
-        language: journalItem.preferred_language,
-        codename: journalItem.system.codename,
-      },
-    })
-  )
 
   const { data: projects } = await graphql(`
     query ProjectQuery {
@@ -226,6 +227,17 @@ exports.createPages = async ({ graphql, actions }) => {
             url_slug {
               value
             }
+            title {
+              value
+            }
+            release_date {
+              value
+            }
+            listing_category {
+              value {
+                codename
+              }
+            }
           }
           system {
             codename
@@ -235,17 +247,6 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     }
   `)
-
-  projects.allKontentItemProject.nodes.forEach((projectItem) =>
-    createPage({
-      path: pathFor('project', projectItem.elements.url_slug.value),
-      component: require.resolve('./src/templates/project-item.js'),
-      context: {
-        language: projectItem.preferred_language,
-        codename: projectItem.system.codename,
-      },
-    })
-  )
 
   const { data: talks } = await graphql(`
     query TalkQuery {
@@ -265,6 +266,17 @@ exports.createPages = async ({ graphql, actions }) => {
             url_slug {
               value
             }
+            title {
+              value
+            }
+            release_date {
+              value
+            }
+            listing_category {
+              value {
+                codename
+              }
+            }
           }
           system {
             codename
@@ -275,13 +287,32 @@ exports.createPages = async ({ graphql, actions }) => {
     }
   `)
 
-  talks.allKontentItemTalk.nodes.forEach((talkItem) =>
+  // one list of every detail page, so each page can link its related items
+  const detailItems = [
+    ['gotcha', gotchas.allKontentItemGotcha.nodes, 'journal-item.js'],
+    ['project', projects.allKontentItemProject.nodes, 'project-item.js'],
+    ['talk', talks.allKontentItemTalk.nodes, 'talk-item.js'],
+  ].flatMap(([type, nodes, template]) =>
+    nodes.map((node) => ({
+      type,
+      template,
+      codename: node.system.codename,
+      language: node.preferred_language,
+      title: node.elements.title.value,
+      slug: node.elements.url_slug.value,
+      date: (node.elements.post_date || node.elements.release_date).value,
+      categories: node.elements.listing_category.value.map((c) => c.codename),
+    }))
+  )
+
+  detailItems.forEach((item) =>
     createPage({
-      path: pathFor('talk', talkItem.elements.url_slug.value),
-      component: require.resolve('./src/templates/talk-item.js'),
+      path: pathFor(item.type, item.slug),
+      component: require.resolve(`./src/templates/${item.template}`),
       context: {
-        language: talkItem.preferred_language,
-        codename: talkItem.system.codename,
+        language: item.language,
+        codename: item.codename,
+        related: relatedItems(detailItems, item),
       },
     })
   )
