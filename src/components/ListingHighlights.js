@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import { itemPath } from '../utils/paths'
+import { imageAlt } from '../utils/image-alt'
 
 // Listing highlights (Landing page type), the home page sections from the
 // Kontent "Listing highlight" items: one band per highlight with a photo, the
@@ -58,7 +59,10 @@ const ListingHighlights = ({ highlights }) =>
                         {item.elements.image.value[0] && (
                           <img
                             src={`${item.elements.image.value[0].url}?w=192&h=120&fit=crop`}
-                            alt=""
+                            alt={imageAlt(
+                              item.elements.image.value[0],
+                              item.elements.title.value
+                            )}
                           />
                         )}
                       </Link>

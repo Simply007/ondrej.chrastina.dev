@@ -45,7 +45,7 @@ This new level of quality allows Progressive Web Apps to earn a place on the use
           href="https://medium.com/free-code-camp/how-to-create-a-progressive-web-app-featuring-angular-and-headless-cms-b8ee4f7a5ea3"
           className="image"
         >
-          <img src={angularHeadless} alt="" />
+          <img src={angularHeadless} alt="Angular PWA with a headless CMS" />
         </a>
         <div className="content">
           <div className="inner">
@@ -77,7 +77,7 @@ This new level of quality allows Progressive Web Apps to earn a place on the use
           href="https://medium.com/free-code-camp/how-to-tune-up-your-progressive-web-app-to-get-a-perfect-audit-score-a1779d063eb7"
           className="image"
         >
-          <img src={lighthouseAudit} alt="" />
+          <img src={lighthouseAudit} alt="Lighthouse audit of the PWA" />
         </a>
         <div className="content">
           <div className="inner">
@@ -110,7 +110,7 @@ This new level of quality allows Progressive Web Apps to earn a place on the use
           href="https://medium.com/free-code-camp/how-to-make-sure-your-progressive-web-app-keeps-its-lighthouse-audit-score-4c11cf514e1a"
           className="image"
         >
-          <img src={lighthouseInCI} alt="" />
+          <img src={lighthouseInCI} alt="Lighthouse running in CI" />
         </a>
         <div className="content">
           <div className="inner">

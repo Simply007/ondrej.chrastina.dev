@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import { ImageElement } from '@kontent-ai/gatsby-components'
+import { imageAlt } from '../utils/image-alt'
 
 const BannerLanding = (props) => (
   <section
@@ -11,6 +12,7 @@ const BannerLanding = (props) => (
     {props.heroImage && (
       <ImageElement
         image={props.heroImage}
+        alt={imageAlt(props.heroImage, props.title)}
         style={{
           position: 'absolute',
           left: 0,

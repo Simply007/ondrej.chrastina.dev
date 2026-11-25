@@ -19,7 +19,7 @@ const Generic = (props) => (
             <h1>Generic</h1>
           </header>
           <span className="image main">
-            <img src={pic11} alt="" />
+            <img src={pic11} alt="Style guide sample image" />
           </span>
           <p>
             Donec eget ex magna. Interdum et malesuada fames ac ante ipsum

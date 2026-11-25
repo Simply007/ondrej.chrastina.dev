@@ -97,7 +97,10 @@ const ProjectItem = ({ data: { kontentItemProject }, location }) => {
         </section>
         <section>
           <div className="inner" data-kontent-element-codename="content">
-            <RichText element={kontentItemProject.elements.content} />
+            <RichText
+              element={kontentItemProject.elements.content}
+              title={kontentItemProject.elements.title.value}
+            />
           </div>
         </section>
       </div>

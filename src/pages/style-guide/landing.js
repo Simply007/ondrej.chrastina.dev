@@ -37,7 +37,7 @@ const Landing = (props) => (
       </section>
       <section>
         <Link to="/generic" className="image">
-          <img src={pic08} alt="" />
+          <img src={pic08} alt="Style guide sample image" />
         </Link>
         <div className="content">
           <div className="inner">
@@ -63,7 +63,7 @@ const Landing = (props) => (
       </section>
       <section>
         <Link to="/generic" className="image">
-          <img src={pic09} alt="" />
+          <img src={pic09} alt="Style guide sample image" />
         </Link>
         <div className="content">
           <div className="inner">
@@ -89,7 +89,7 @@ const Landing = (props) => (
       </section>
       <section>
         <Link to="/generic" className="image">
-          <img src={pic10} alt="" />
+          <img src={pic10} alt="Style guide sample image" />
         </Link>
         <div className="content">
           <div className="inner">
