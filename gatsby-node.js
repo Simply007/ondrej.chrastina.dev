@@ -16,6 +16,7 @@ const {
   buildRobotsTxt,
   buildLlmsTxt,
   buildLlmsFullTxt,
+  buildSitemapXml,
 } = require('./lib/static-seo-files')
 
 exports.createSchemaCustomization = async (api) => {
@@ -509,4 +510,18 @@ exports.onPostBuild = async ({ graphql, reporter }) => {
   fs.writeFileSync('./public/llms.txt', buildLlmsTxt(siteContent))
   fs.writeFileSync('./public/llms-full.txt', buildLlmsFullTxt(siteContent))
   reporter.info('Wrote robots.txt, llms.txt, and llms-full.txt')
+
+  // gatsby-plugin-sitemap has written its files by now (the site's own
+  // gatsby-node runs after the plugins)
+  const readPublic = (file) => fs.readFileSync(`./public/${file}`, 'utf8')
+  const parts = fs
+    .readdirSync('./public')
+    .filter((file) => /^sitemap-\d+\.xml$/.test(file))
+    .sort((a, b) => parseInt(a.slice(8)) - parseInt(b.slice(8)))
+    .map(readPublic)
+  fs.writeFileSync(
+    './public/sitemap.xml',
+    buildSitemapXml({ index: readPublic('sitemap-index.xml'), parts })
+  )
+  reporter.info('Wrote sitemap.xml')
 }
