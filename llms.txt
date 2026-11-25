@@ -94,5 +94,5 @@ Full article content in markdown: https://ondrej.chrastina.dev/llms-full.txt
 
 ## Optional
 
-- [Sitemap](https://ondrej.chrastina.dev/sitemap-index.xml)
+- [Sitemap](https://ondrej.chrastina.dev/sitemap.xml)
 - [RSS feed](https://ondrej.chrastina.dev/rss.xml)

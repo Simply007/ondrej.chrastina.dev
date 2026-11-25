@@ -46,4 +46,4 @@ Allow: /
 User-agent: meta-externalagent
 Allow: /
 
-Sitemap: https://ondrej.chrastina.dev/sitemap-index.xml
+Sitemap: https://ondrej.chrastina.dev/sitemap.xml
